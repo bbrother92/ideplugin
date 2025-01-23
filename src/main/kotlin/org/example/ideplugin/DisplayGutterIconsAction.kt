@@ -1,18 +1,14 @@
 package org.example.ideplugin
 
-import com.intellij.codeInsight.daemon.LineMarkerInfo
 import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerEx
 import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.diagnostic.Logger
-import com.intellij.openapi.editor.impl.EditorImpl
-import com.intellij.openapi.editor.markup.GutterIconRenderer
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.vfs.VirtualFile
-import java.util.function.Supplier
 
 
 class DisplayGutterIconsAction : AnAction() {
@@ -38,7 +34,7 @@ class DisplayGutterIconsAction : AnAction() {
 
 
 
-//EditorGutterComponentImpl
+//   EditorGutterComponentImpl
 //        LineMarkerGutterIconRenderer
 //        GutterIconRenderer.getAccessibleName()
         //gutterIconRenderer
@@ -46,8 +42,8 @@ class DisplayGutterIconsAction : AnAction() {
 
         val daemonCodeAnalyzer = DaemonCodeAnalyzerEx.getInstanceEx(project)
         logger.warn("daemonCodeAnalyzer: ${daemonCodeAnalyzer.fileStatusMap}")
-
         val lineMarkers = DaemonCodeAnalyzerImpl.getLineMarkers(editor.getDocument(), project)
+
 
 
 //        for (marker in lineMarkers) {
@@ -61,6 +57,7 @@ class DisplayGutterIconsAction : AnAction() {
 
         if (lineMarkers.isNotEmpty()) {
             for (lineMarkerInfo in lineMarkers) {
+
                 val icon = lineMarkerInfo.icon
 //                 val test =  lineMarkerInfo.LineMarkerGutterIconRenderer
 //                val accessibleNameProvider: Supplier<String>? = lineMarkerInfo.getAccessibleNameProvider()
@@ -75,7 +72,6 @@ class DisplayGutterIconsAction : AnAction() {
             )
         }
 
-val tet = "Тhе Рrоgrеssivе Rоаd tо Rеаding\n"
 //        val psiFile = PsiManager.getInstance(project).findFile(file) ?: return
 //        val editor = com.intellij.openapi.fileEditor.FileEditorManager.getInstance(project)
 //            .allEditors
