@@ -18,14 +18,24 @@
 
   <actions>
     <action id="DisplayGutterIcons" class="org.example.ideplugin.DisplayGutterIconsAction" text="Display Gutter Icons" description="List all gutter icons in the current file">
-      <add-to-group group-id="EditorPopupMenu" anchor="first"/>
     </action>
     <action id="PluginVersionAction" class="org.example.ideplugin.PluginVersionAction"
-            text="Display Plugin Version" description="Shows the installed version of the plugin.">
-      <add-to-group group-id="ToolsMenu" anchor="last"/>
+            text="Display Ideplugin Plugin Version" description="Display the installed version of the plugin.">
+    </action>
+    <action id="SelectedUIComponent" class="org.example.ideplugin.SelectedUIComponentAction"
+            text="Display Ideplugin Plugin Version" description="Display information about the currently selected UI Component.">
     </action>
 
+    <group id="PsiViewerEditor" popup="true" text="Custom Ideplugin">
+      <reference ref="DisplayGutterIcons"/>
+      <reference ref="PluginVersionAction"/>
+      <reference ref="SelectedUIComponent"/>
+      <add-to-group group-id="ToolsMenu" anchor="first"/>
+      <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+    </group>
+
   </actions>
+
 
 
 </idea-plugin>
