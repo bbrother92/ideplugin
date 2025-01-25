@@ -14,14 +14,11 @@ class SelectedUIComponentAction : AnAction() {
         val project = event.project
         val editor = event.getData(PlatformDataKeys.EDITOR)
         val component = event.getData(PlatformDataKeys.CONTEXT_COMPONENT)
-        val d2 = event.getData(PlatformDataKeys.SELECTED_ITEMS)
-        val d3 = event.getData(PlatformDataKeys.TOOL_WINDOW) //get ID
-        val d4 = event.getData(PlatformDataKeys.PREDEFINED_TEXT)
-        // services psi null d4 null;   terminal d3 - yes d3d4d5 null;
+        val toolWindowName = event.getData(PlatformDataKeys.TOOL_WINDOW)?.id
 
         val info = when {
             editor != null -> getEditorInfo(editor, event)
-            component != null -> getComponentInfo(component)
+            component != null -> getComponentInfo(component, toolWindowName)
             else -> "No UI component is currently selected."
         }
 
@@ -38,13 +35,14 @@ class SelectedUIComponentAction : AnAction() {
         """.trimMargin()
     }
 
-    private fun getComponentInfo(component: Component): String {
+    private fun getComponentInfo(component: Component, toolWindowName: String?): String {
         val componentClass = component.javaClass.name
         val componentName = component.name
         return """
             UI Component Information:
             Class: $componentClass
-            Name: $componentName
+            Name: ${componentName ?: "Not Available (null) name"}
+            Tool Window ID: ${toolWindowName ?: "Not Available (null) tool window ID"}
         """.trimMargin()
     }
 }
