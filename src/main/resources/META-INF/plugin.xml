@@ -12,18 +12,15 @@
   <actions>
     <action id="DisplayGutterIcons" class="org.example.ideplugin.actions.DisplayGutterIconsAction" text="Display Gutter Icons" description="List all gutter icons in the current file">
     </action>
-    <action id="MyAction" class="MyAction" text="my action java" description="MyAction in the current file">
-    </action>
     <action id="PluginVersionAction" class="org.example.ideplugin.actions.PluginVersionAction"
             text="Display Ideplugin Plugin Version" description="Display the installed version of the plugin.">
     </action>
     <action id="SelectedUIComponent" class="org.example.ideplugin.actions.SelectedUIComponentAction"
-            text="Display Ideplugin Plugin Version" description="Display information about the currently selected UI Component.">
+            text="Display Currently Selected UI Component" description="Display information about the currently selected UI Component.">
     </action>
 
     <group id="PsiViewerEditor" popup="true" text="Custom Ideplugin">
       <reference ref="DisplayGutterIcons"/>
-      <reference ref="MyAction"/>
       <reference ref="PluginVersionAction"/>
       <reference ref="SelectedUIComponent"/>
       <add-to-group group-id="ToolsMenu" anchor="first"/>
