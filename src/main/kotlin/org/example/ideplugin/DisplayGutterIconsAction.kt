@@ -1,86 +1,104 @@
 package org.example.ideplugin
 
-import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerEx
-import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl
+import com.intellij.codeInsight.daemon.GutterMark
+import com.intellij.codeInsight.daemon.LineMarkerInfo
+import com.intellij.icons.AllIcons
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
+import com.intellij.openapi.actionSystem.PlatformDataKeys
 import com.intellij.openapi.diagnostic.Logger
+import com.intellij.openapi.editor.Document
+import com.intellij.openapi.editor.impl.EditorImpl
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.Messages
-import com.intellij.openapi.vfs.VirtualFile
+import org.jetbrains.annotations.Nullable
+import javax.swing.*
 
 
 class DisplayGutterIconsAction : AnAction() {
 
     private val logger = Logger.getInstance(DisplayGutterIconsAction::class.java)
 
-    override fun actionPerformed(e: AnActionEvent) {
-        val project = e.project
-        val file = e.getData(com.intellij.openapi.actionSystem.CommonDataKeys.VIRTUAL_FILE)
+    override fun actionPerformed(event: AnActionEvent) {
+
+        val project = event.project
+        val file = event.getData(CommonDataKeys.VIRTUAL_FILE)
 
         if (project == null || file == null) {
-            logger.warn("No project or file found in the current context.")
+            logger.warn("No file or project in the current context.")
             return
         }
+        val editor = event.getData(PlatformDataKeys.EDITOR)
+        val document: Document = editor?.document ?: return
 
-        logger.warn("Action triggered for file: ${file.name}")
-        displayGutterIcons(project, file, e)
-    }
-
-    private fun displayGutterIcons(project: Project, file: VirtualFile, event: AnActionEvent) {
-
-    val editor = event.getRequiredData(CommonDataKeys.EDITOR);
-
-
-
-//   EditorGutterComponentImpl
-//        LineMarkerGutterIconRenderer
-//        GutterIconRenderer.getAccessibleName()
-        //gutterIconRenderer
-        // LineMarkerInfo.LineMarkerGutterIconRenderer
-
-        val daemonCodeAnalyzer = DaemonCodeAnalyzerEx.getInstanceEx(project)
-        logger.warn("daemonCodeAnalyzer: ${daemonCodeAnalyzer.fileStatusMap}")
-        val lineMarkers = DaemonCodeAnalyzerImpl.getLineMarkers(editor.getDocument(), project)
-
-
-
-//        for (marker in lineMarkers) {
-//            if (marker is LineMarkerInfo<*>) {
-//                val renderer = marker.createGutterRenderer()
-//                if (renderer is LineMarkerInfo.LineMarkerGutterIconRenderer<*>) {
-//                    renderers.add(renderer)
-//                }
-//            }
-//        }
-
-        if (lineMarkers.isNotEmpty()) {
-            for (lineMarkerInfo in lineMarkers) {
-
-                val icon = lineMarkerInfo.icon
-//                 val test =  lineMarkerInfo.LineMarkerGutterIconRenderer
-//                val accessibleNameProvider: Supplier<String>? = lineMarkerInfo.getAccessibleNameProvider()
-
-                Messages.showMessageDialog(
-                    project, "Gutter Icons in '${file.name}':\n${lineMarkerInfo.element.toString()}", "Gutter Icons", icon
-                )
+        val gutterComponent = (editor as EditorImpl).gutterComponentEx
+        val gutterMarksList = mutableListOf<GutterMark>()
+        for (line in 0 until document.lineCount) {
+            val renderers = gutterComponent.getGutterRenderers(line)
+            for (renderer in renderers) {
+                if (renderer is GutterMark) {
+                    gutterMarksList.add(renderer)
+                }
             }
-        } else {
-            Messages.showMessageDialog(
-                project, "No gutter icons found in '${file.name}'.", "Gutter Icons", null
-            )
         }
 
-//        val psiFile = PsiManager.getInstance(project).findFile(file) ?: return
-//        val editor = com.intellij.openapi.fileEditor.FileEditorManager.getInstance(project)
-//            .allEditors
-//            .filterIsInstance<com.intellij.openapi.fileEditor.TextEditor>()
-//            .firstOrNull { it.editor.document == psiFile.viewProvider.document }
-//            ?.editor
-//
+        val firstGutterMark = gutterMarksList.firstOrNull { it is LineMarkerInfo.LineMarkerGutterIconRenderer<*> }
+        logger.warn("Accessible Name: $firstGutterMark |")
 
+        if (firstGutterMark != null) {
+            val gutterRenderer = firstGutterMark as LineMarkerInfo.LineMarkerGutterIconRenderer<*>
+            logger.warn("Accessible Name: ${gutterRenderer.accessibleName ?: "Not Available"}")
+        } else {
+            logger.warn("No LineMarkerInfo.LineMarkerGutterIconRenderer found.")
+        }
+
+        displayGutterIcons(gutterMarksList, project)
+    }
+
+    private fun displayGutterIcons(gutterMarksList: MutableList<GutterMark>, project: Project) {
+        if (gutterMarksList.isNotEmpty()) {
+            CustomDialog(gutterMarksList).showAndGet()
+        } else {
+            Messages.showMessageDialog(
+                project, "No gutter icons found.", "Collected Gutter Icons Dialog", AllIcons.General.Warning
+            )
+        }
+    }
+}
+
+class CustomDialog(gutterMarksList: List<GutterMark>) : DialogWrapper(true) {
+
+    private val panel = JPanel().apply {
+        layout = BoxLayout(this, BoxLayout.Y_AXIS)
+        for (gutterMark in gutterMarksList) {
+            val jlabel = JLabel(gutterMark.tooltipText ?: gutterMark.javaClass.name).apply {
+                icon = gutterMark.icon
+            }
+            add(jlabel)
+            add(JSeparator())
+        }
+        add(JLabel("Total count: ${gutterMarksList.size}"))
+
+    }
+
+    init {
+        init()
+        title = "Collected Gutter Icons"
+        setOKButtonText("Good")
+    }
+
+    @Nullable
+    override fun createCenterPanel(): JComponent {
+        return panel
     }
 
 
 }
+
+
+
+
+
+

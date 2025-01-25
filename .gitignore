@@ -40,3 +40,9 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+/src/main/java/Madiag.java
+/src/main/java/Madiag.form
+/src/main/java/InvalidOrderException.java
+/src/main/java/MyAction.java
+/src/main/java/OrderProcessor.java

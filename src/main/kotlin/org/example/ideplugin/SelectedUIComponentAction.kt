@@ -1,11 +1,10 @@
 package org.example.ideplugin
 
-import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerEx
-import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl
-import com.intellij.openapi.actionSystem.*
+import com.intellij.openapi.actionSystem.AnAction
+import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.actionSystem.PlatformDataKeys
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.ui.Messages
-import com.intellij.psi.util.PsiEditorUtil
 import java.awt.Component
 
 
@@ -20,10 +19,6 @@ class SelectedUIComponentAction : AnAction("Display Selected UI") {
         val d4 = event.getData(PlatformDataKeys.PREDEFINED_TEXT)
         // services psi null d4 null;   terminal d3 - yes d3d4d5 null;
 
-//
-
-
-        // Collect information
         val info = when {
             editor != null -> getEditorInfo(editor, event)
             component != null -> getComponentInfo(component)

@@ -1,8 +1,8 @@
-pluginManagement {
-    repositories {
-        mavenCentral()
-        gradlePluginPortal()
-    }
-}
-
 rootProject.name = "ideplugin"
+
+//pluginManagement {
+//    repositories {
+//        mavenCentral()
+//        gradlePluginPortal()
+//    }
+//}

@@ -6,7 +6,7 @@
        Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-name -->
   <name>Ideplugin</name>
   <vendor>JetBrains</vendor>
-
+  <version>0.0.1</version>
   <!-- Product and plugin compatibility requirements.
        Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
   <depends>com.intellij.modules.platform</depends>
@@ -19,6 +19,8 @@
   <actions>
     <action id="DisplayGutterIcons" class="org.example.ideplugin.DisplayGutterIconsAction" text="Display Gutter Icons" description="List all gutter icons in the current file">
     </action>
+    <action id="MyAction" class="MyAction" text="my action java" description="MyAction in the current file">
+    </action>
     <action id="PluginVersionAction" class="org.example.ideplugin.PluginVersionAction"
             text="Display Ideplugin Plugin Version" description="Display the installed version of the plugin.">
     </action>
@@ -28,6 +30,7 @@
 
     <group id="PsiViewerEditor" popup="true" text="Custom Ideplugin">
       <reference ref="DisplayGutterIcons"/>
+      <reference ref="MyAction"/>
       <reference ref="PluginVersionAction"/>
       <reference ref="SelectedUIComponent"/>
       <add-to-group group-id="ToolsMenu" anchor="first"/>
