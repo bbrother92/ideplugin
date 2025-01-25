@@ -1,4 +1,4 @@
-package org.example.ideplugin
+package org.example.ideplugin.actions
 
 import com.intellij.codeInsight.daemon.GutterMark
 import com.intellij.icons.AllIcons
@@ -10,10 +10,8 @@ import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.impl.EditorImpl
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.Messages
-import org.jetbrains.annotations.Nullable
-import javax.swing.*
+import ui.CustomDialog
 
 
 class DisplayGutterIconsAction : AnAction() {
@@ -55,35 +53,6 @@ class DisplayGutterIconsAction : AnAction() {
             )
         }
     }
-}
-
-class CustomDialog(gutterMarksList: List<GutterMark>) : DialogWrapper(true) {
-
-    private val panel = JPanel().apply {
-        layout = BoxLayout(this, BoxLayout.Y_AXIS)
-        for (gutterMark in gutterMarksList) {
-            val jlabel = JLabel(gutterMark.tooltipText ?: gutterMark.javaClass.name).apply {
-                icon = gutterMark.icon
-            }
-            add(jlabel)
-            add(JSeparator())
-        }
-        add(JLabel("Total count: ${gutterMarksList.size}"))
-
-    }
-
-    init {
-        init()
-        title = "Collected Gutter Icons"
-        setOKButtonText("Good")
-    }
-
-    @Nullable
-    override fun createCenterPanel(): JComponent {
-        return panel
-    }
-
-
 }
 
 
