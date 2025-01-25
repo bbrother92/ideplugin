@@ -1,7 +1,6 @@
 package org.example.ideplugin
 
 import com.intellij.codeInsight.daemon.GutterMark
-import com.intellij.codeInsight.daemon.LineMarkerInfo
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -42,16 +41,6 @@ class DisplayGutterIconsAction : AnAction() {
                     gutterMarksList.add(renderer)
                 }
             }
-        }
-
-        val firstGutterMark = gutterMarksList.firstOrNull { it is LineMarkerInfo.LineMarkerGutterIconRenderer<*> }
-        logger.warn("Accessible Name: $firstGutterMark |")
-
-        if (firstGutterMark != null) {
-            val gutterRenderer = firstGutterMark as LineMarkerInfo.LineMarkerGutterIconRenderer<*>
-            logger.warn("Accessible Name: ${gutterRenderer.accessibleName ?: "Not Available"}")
-        } else {
-            logger.warn("No LineMarkerInfo.LineMarkerGutterIconRenderer found.")
         }
 
         displayGutterIcons(gutterMarksList, project)
