@@ -16,7 +16,7 @@ class PluginVersionAction : AnAction() {
         Messages.showMessageDialog(
             "Plugin Version: $version",
             "Plugin Version",
-            AllIcons.General.Information
+            AllIcons.Plugins.PluginLogo
         )
     }
 }
