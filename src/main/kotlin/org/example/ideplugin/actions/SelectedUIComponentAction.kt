@@ -2,6 +2,7 @@ package org.example.ideplugin.actions
 
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.actionSystem.PlatformDataKeys
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.ui.Messages
@@ -9,8 +10,8 @@ import java.awt.Component
 
 
 class SelectedUIComponentAction : AnAction() {
-    override fun actionPerformed(event: AnActionEvent) {
 
+    override fun actionPerformed(event: AnActionEvent) {
         val project = event.project
         val editor = event.getData(PlatformDataKeys.EDITOR)
         val component = event.getData(PlatformDataKeys.CONTEXT_COMPONENT)
@@ -26,23 +27,26 @@ class SelectedUIComponentAction : AnAction() {
     }
 
     private fun getEditorInfo(editor: Editor, event: AnActionEvent): String {
-        val file = event.getData(com.intellij.openapi.actionSystem.CommonDataKeys.VIRTUAL_FILE)
+        val fileName = event.getData(CommonDataKeys.VIRTUAL_FILE)?.name
+        val caretPosition = editor.caretModel.logicalPosition
 
         return """
-            Editor Information:
-            File: ${file?.name}
-            Caret: Line ${editor.caretModel.logicalPosition.line + 1}, Column ${editor.caretModel.logicalPosition.column + 1}
-        """.trimMargin()
+        Editor Information:
+        File: $fileName
+        Caret: Line ${caretPosition.line + 1}, Column ${caretPosition.column + 1}
+    """.trimMargin()
     }
 
     private fun getComponentInfo(component: Component, toolWindowName: String?): String {
         val componentClass = component.javaClass.name
-        val componentName = component.name
+        val componentName = component.name ?: "Not Available (null) name"
+        val toolWindowId = toolWindowName ?: "Not Available (null) tool window ID"
+
         return """
-            UI Component Information:
-            Class: $componentClass
-            Name: ${componentName ?: "Not Available (null) name"}
-            Tool Window ID: ${toolWindowName ?: "Not Available (null) tool window ID"}
-        """.trimMargin()
+        UI Component Information:
+        Class: $componentClass
+        Name: $componentName
+        Tool Window ID: $toolWindowId
+    """.trimMargin()
     }
 }

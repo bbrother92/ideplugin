@@ -19,7 +19,6 @@ class DisplayGutterIconsAction : AnAction() {
     private val logger = Logger.getInstance(DisplayGutterIconsAction::class.java)
 
     override fun actionPerformed(event: AnActionEvent) {
-
         val project = event.project
         val file = event.getData(CommonDataKeys.VIRTUAL_FILE)
 
@@ -27,24 +26,25 @@ class DisplayGutterIconsAction : AnAction() {
             logger.warn("No file or project in the current context.")
             return
         }
-        val editor = event.getData(PlatformDataKeys.EDITOR)
-        val document: Document = editor?.document ?: return
 
+        val editor = event.getData(PlatformDataKeys.EDITOR) ?: run {
+            logger.warn("No editor in the current context.")
+            return
+        }
+
+        val document: Document = editor.document
         val gutterComponent = (editor as EditorImpl).gutterComponentEx
         val gutterMarksList = mutableListOf<GutterMark>()
+
         for (line in 0 until document.lineCount) {
             val renderers = gutterComponent.getGutterRenderers(line)
-            for (renderer in renderers) {
-                if (renderer is GutterMark) {
-                    gutterMarksList.add(renderer)
-                }
-            }
+            gutterMarksList.addAll(renderers.filterIsInstance<GutterMark>())
         }
 
         displayGutterIcons(gutterMarksList, project)
     }
 
-    private fun displayGutterIcons(gutterMarksList: MutableList<GutterMark>, project: Project) {
+    private fun displayGutterIcons(gutterMarksList: List<GutterMark>, project: Project) {
         if (gutterMarksList.isNotEmpty()) {
             CustomDialog(gutterMarksList).showAndGet()
         } else {
